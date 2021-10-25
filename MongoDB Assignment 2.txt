@@ -1,0 +1,23 @@
+	MongoDB Assignment 2
+Atlanta Population
+1 db.zipcodes.find({$and:[{city:"ATLANTA"},{state:"GA"}]})
+2 db.zipcodes.aggregate([{$match: {city:"ATLANTA",state:"GA"}}])
+3 db.zipcodes.aggregate([{$group: {_id: {city:"$city"},count:{"$sum":1}}}, {$match: {"_id.city":"ATLANTA"}}])
+4 db.zipcodes.aggregate([{$match: { city:"ATLANTA" }}, {$group: { _id:{city: "$city"},TotalPop:{$sum:"$pop"}}}])
+Populations By State
+1 db.zipcodes.aggregate([{$group: {_id:{State: "$state"},TotalPop:{$sum:"$pop"}}}])
+2 db.zipcodes.aggregate([{$group: {_id:{State: "$state"},TotPop:{$sum:"$pop"}}}, {$sort: { TotPop: -1}}])
+3 db.zipcodes.aggregate([{$group: {_id:{State: "$state"},TotPop:{$sum:"$pop"}}}, {$sort: { TotPop: -1}},{$limit:3}]
+   //Top 3 States in population are ...CA,NY and TX.
+Populations by City
+1 db.zipcodes.aggregate([{$group: {_id:{City: "$city",State:"$state"},TotPop:{$sum:"$pop"}}}])
+2 db.zipcodes.aggregate([{$group: {_id:{City: "$city",State:"$state"},TotPop:{$sum:"$pop"}}},{$sort:{ TotPop: -1}])
+3 db.zipcodes.aggregate([{$group: {_id:{City: "$city",State:"$state"},TotPop:{$sum:"$pop"}}},{$sort:{ TotPop: -1},{$limit:3}])
+4 db.zipcodes.aggregate([{$group: {_id:{City: "$city",State:"$state"},TotPop:{$sum:"$pop"}}},
+	{$match: {"_id.State":"TX"}}, {$sort: {TotPop:-1}}, {$limit: 3}])
+	//Top 3 cities in population in Texas are ..Houstan, Dallas and San Antonio..
+Bonus
+1 db.zipcodes.aggregate([{$group:{_id:{State:"$state"},AvgPop:{$avg:"$pop"}}}])
+2  db.zipcodes.aggregate([{$group: {_id:{State:"$state",City:"$city"},AvgPop:{$avg:"$pop"}}},
+	{$sort: { AvgPop:-1}}, {$limit: 3}])
+	// Top 3 States in Terms of Average City Population are...CA NY and MI
